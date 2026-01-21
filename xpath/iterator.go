@@ -1,7 +1,9 @@
 package xpath
 
 import (
-	"github.com/lestrrat-go/libxml2/types"
+	"unsafe"
+
+	"github.com/kivra/libxml2/types"
 )
 
 // NodeIterator is a way to get at a list of nodes returned
@@ -10,10 +12,10 @@ type NodeIterator struct {
 	cur     int
 	curnode types.Node
 	nlen    int
-	nodes   []uintptr
+	nodes   []unsafe.Pointer
 }
 
-func NewNodeIterator(nodes []uintptr) *NodeIterator {
+func NewNodeIterator(nodes []unsafe.Pointer) *NodeIterator {
 	return &NodeIterator{
 		cur:   -1,
 		nlen:  len(nodes),

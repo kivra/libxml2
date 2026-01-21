@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/lestrrat-go/libxml2"
+	"github.com/kivra/libxml2"
 )
 
 func main() {

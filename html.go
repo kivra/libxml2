@@ -4,10 +4,10 @@ import (
 	"bytes"
 	"io"
 
-	"github.com/lestrrat-go/libxml2/clib"
-	"github.com/lestrrat-go/libxml2/dom"
-	"github.com/lestrrat-go/libxml2/parser"
-	"github.com/lestrrat-go/libxml2/types"
+	"github.com/kivra/libxml2/clib"
+	"github.com/kivra/libxml2/dom"
+	"github.com/kivra/libxml2/parser"
+	"github.com/kivra/libxml2/types"
 	"github.com/pkg/errors"
 )
 
@@ -31,7 +31,7 @@ func ParseHTMLString(content string, options ...parser.HTMLOption) (types.Docume
 		return nil, errors.Wrap(err, "failed to read document")
 	}
 
-	if docptr == 0 {
+	if docptr == nil {
 		return nil, errors.Wrap(clib.ErrInvalidDocument, "failed to get valid document pointer")
 	}
 	return dom.WrapDocument(docptr), nil

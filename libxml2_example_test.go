@@ -4,14 +4,14 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/lestrrat-go/libxml2"
-	"github.com/lestrrat-go/libxml2/parser"
-	"github.com/lestrrat-go/libxml2/types"
-	"github.com/lestrrat-go/libxml2/xpath"
+	"github.com/kivra/libxml2"
+	"github.com/kivra/libxml2/parser"
+	"github.com/kivra/libxml2/types"
+	"github.com/kivra/libxml2/xpath"
 )
 
 //nolint:testableexamples
-func ExampleXML() {
+func Example_xml() {
 	//nolint:noctx
 	res, err := http.Get("http://blog.golang.org/feed.atom")
 	if err != nil {
@@ -51,7 +51,7 @@ func ExampleXML() {
 }
 
 //nolint:testableexamples
-func ExampleHTML() {
+func Example_html() {
 	//nolint:noctx
 	res, err := http.Get("http://golang.org")
 	if err != nil {

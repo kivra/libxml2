@@ -1,9 +1,6 @@
 # libxml2
 
-
 **NOTICE**: Instead of making people use this library while wondering if this module is ever going to be modified any time soon, I've opted to archive it. I may come back to it later, but for the time being I have no motivation or pressing need to work on this project.
-
-
 
 Interface to libxml2, with DOM interface.
 
@@ -25,7 +22,7 @@ I needed to write [go-xmlsec](https://github.com/lestrrat-go/xmlsec). This means
 * This library should be considered alpha grade. API may still change.
 * Much of commonly used functionalities from libxml2 that *I* use are there already, and are known to be functional
 
-## Package Layout:
+## Package Layout
 
 | Name    | Description                                                 |
 |---------|-------------------------------------------------------------|
@@ -206,7 +203,7 @@ func ExampleXSD() {
 
 ### Other libraries
 
-There exists many similar libraries. I want speed, I want DOM, and I want XPath.When all of these are met, I'd be happy to switch to another library.
+There exists many similar libraries. I want speed, I want DOM, and I want XPath. When all of these are met, I'd be happy to switch to another library.
 
 For now my closest contender was [xmlpath](https://github.com/go-xmlpath/xmlpath), but as of this writing it suffers in the speed (for xpath) area a bit:
 
@@ -224,7 +221,7 @@ ok      github.com/lestrrat-go/libxml2  37.597s
 
 ### "It won't build"
 
-The very first thing you need to be aware is that this is a _C binding_ to
+The very first thing you need to be aware is that this is a *C binding* to
 libxml2. You should understand how to build C programs, how to debug them,
 or at least be able to ask the right questions and deal with a great deal
 more than Go alone.
@@ -250,7 +247,7 @@ before filing an issue on this repository.
 
 Your C compiler, which is invoked via Go, needs to be able to find the libxml2
 header files. If you installed them in a non-standard location, for example,
-such as outside of /usr/include and /usr/local/include, you _may_ have to
+such as outside of /usr/include and /usr/local/include, you *may* have to
 configure them yourself.
 
 How to configure them depends greatly on your environment, and again, if you
@@ -259,7 +256,7 @@ about it, not this repository.
 
 3. **Your pkg-config files are not in the search path**
 
-If you don't understand what pkg-config does, this is where you should either 
+If you don't understand what pkg-config does, this is where you should either
 look for your local sysadmin friend, or study how these things work
 before filing an issue on this repository.
 
@@ -267,8 +264,8 @@ pkg-config provides metadata about a installed components, such as build flags
 that are required. Go uses it to figure out how to build and link Go programs
 that needs to interact with things written in C.
 
-However, pkg-config is merely a thin frontend to extract information from 
-file(s) that each component provided upon installation. 
+However, pkg-config is merely a thin frontend to extract information from
+file(s) that each component provided upon installation.
 pkg-config itself needs to know where to find these files.
 
 Make sure that the output of the following command contains `libxml-2.0`.
@@ -293,8 +290,8 @@ go build -tags static_build
 
 ## See Also
 
-* https://github.com/lestrrat-go/xmlsec
+* <https://github.com/lestrrat-go/xmlsec>
 
 ## Credits
 
-* Work on this library was generously sponsored by HDE Inc (https://www.hde.co.jp)
+* Work on this library was generously sponsored by HDE Inc (<https://www.hde.co.jp>)

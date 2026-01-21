@@ -9,9 +9,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lestrrat-go/libxml2"
-	"github.com/lestrrat-go/libxml2/dom"
-	"github.com/lestrrat-go/libxml2/xpath"
+	"github.com/kivra/libxml2"
+	"github.com/kivra/libxml2/dom"
+	"github.com/kivra/libxml2/xpath"
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/xmlpath.v1"
 )
@@ -109,7 +109,7 @@ func BenchmarkLibxml2Xmlpath(b *testing.B) {
 
 //nolint:musttag
 type Foo struct {
-	XMLName xml.Name `xml:"https://github.com/lestrrat-go/libxml2/foo foo:foo"`
+	XMLName xml.Name `xml:"https://github.com/kivra/libxml2/foo foo:foo"`
 	Field1  string
 	Field2  string `xml:",attr"`
 }
@@ -129,7 +129,7 @@ func BenchmarkEncodingXMLDOM(b *testing.B) {
 
 func BenchmarkLibxml2DOM(b *testing.B) {
 	var buf bytes.Buffer
-	const nsuri = `https://github.com/lestrrat-go/libxml2/foo`
+	const nsuri = `https://github.com/kivra/libxml2/foo`
 	f := Foo{
 		Field1: "Hello, World!",
 		Field2: "Hello, Attribute!",

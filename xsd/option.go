@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/lestrrat-go/libxml2/internal/option"
+	"github.com/kivra/libxml2/internal/option"
 )
 
 // WithPath provides a hint to the XSD parser as to where the

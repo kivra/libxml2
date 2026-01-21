@@ -1,7 +1,7 @@
 package dom
 
 import (
-	"github.com/lestrrat-go/libxml2/clib"
+	"github.com/kivra/libxml2/clib"
 )
 
 // URI returns the namespace URL
@@ -17,7 +17,7 @@ func (n *Namespace) Prefix() string {
 // Free releases the underlying C struct
 func (n *Namespace) Free() {
 	clib.XMLNamespaceFree(n)
-	n.ptr = 0
+	n.ptr = nil
 }
 
 // String returns the stringified Namespace
