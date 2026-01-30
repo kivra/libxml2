@@ -1890,7 +1890,7 @@ func XMLParseInNodeContext(n PtrSource, data string, o int) (unsafe.Pointer, err
 		return nil, err
 	}
 
-	var ret *C.xmlNode
+	var ret C.xmlNodePtr
 	cdata := C.CString(data)
 	defer C.free(unsafe.Pointer(cdata))
 	if C.xmlParseInNodeContext(nptr, cdata, C.int(len(data)), C.int(o), &ret) != 0 {
