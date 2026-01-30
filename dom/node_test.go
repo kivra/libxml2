@@ -239,3 +239,28 @@ func TestCreateElementNS(t *testing.T) {
 
 	t.Logf("%s", doc.Dump(false))
 }
+
+func TestParseInContext(t *testing.T) {
+	doc := CreateDocument()
+	defer doc.Free()
+
+	root, err := doc.CreateElement("root")
+	if !assert.NoError(t, err, "CreateElement should succeed") {
+		return
+	}
+	doc.SetDocumentElement(root)
+
+	// Parse a new element in the context of the root node
+	child, err := root.ParseInContext("<child>content</child>", 0)
+	if !assert.NoError(t, err, "ParseInContext should succeed") {
+		return
+	}
+
+	// Add the parsed node to the document
+	root.AddChild(child)
+
+	expected := `<?xml version="1.0" encoding="utf-8"?>
+<root><child>content</child></root>
+`
+	assert.Equal(t, expected, doc.String(), "Document should contain parsed child")
+}
