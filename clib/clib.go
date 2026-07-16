@@ -67,6 +67,16 @@ static inline xmlError* MY_xmlCtxtLastError(void *ctx) {
 	return (xmlError*) xmlCtxtGetLastError(ctx);
 }
 
+// Signature-stable wrapper. libxml2 headers changed the spelling of the
+// last parameter from `xmlNodePtr *` (2.9-era) to `xmlNode **` (2.15-era).
+// Both spell the same C type, but cgo derives distinct Go types from the
+// spelling, so Go code calling xmlParseInNodeContext directly only
+// compiles against one header generation. Calling through this wrapper
+// pins the spelling, making the Go side independent of the header version.
+static inline xmlParserErrors MY_xmlParseInNodeContext(xmlNodePtr node, const char *data, int datalen, int options, xmlNodePtr *lst) {
+	return xmlParseInNodeContext(node, data, datalen, options, lst);
+}
+
 // Dump node to buffer with formatting using modern xmlSave API
 static inline void MY_xmlNodeDumpFormatted(xmlBufferPtr buffer, xmlDocPtr doc, xmlNodePtr node, int format) {
 	xmlSaveCtxtPtr ctxt;
@@ -1893,7 +1903,7 @@ func XMLParseInNodeContext(n PtrSource, data string, o int) (unsafe.Pointer, err
 	var ret C.xmlNodePtr
 	cdata := C.CString(data)
 	defer C.free(unsafe.Pointer(cdata))
-	if C.xmlParseInNodeContext(nptr, cdata, C.int(len(data)), C.int(o), &ret) != 0 {
+	if C.MY_xmlParseInNodeContext(nptr, cdata, C.int(len(data)), C.int(o), &ret) != 0 {
 		return nil, errors.New("XXX PLACE HOLDER XXX")
 	}
 
