@@ -36,6 +36,49 @@ I needed to write [go-xmlsec](https://github.com/lestrrat-go/xmlsec). This means
 
 ## Features
 
+### Restricted XML parsing
+
+Existing parser APIs retain their behavior. For untrusted XML, opt in to
+`libxml2.ParseRestricted` or `libxml2.ParseRestrictedReader(reader, maxBytes)`.
+These require native libxml2 2.14 or newer and fail closed on older versions.
+They reject DTDs with the native parser, deny resource loading per context, and
+do not enable entity substitution, DTD loading/validation, XInclude, recovery,
+or `HUGE`. No process-global loaders or error handlers are changed.
+
+There is no universal application body-size limit. The restricted reader
+requires a positive limit chosen by its caller and consumes at most that limit
+plus one byte. Oversized input returns `ErrInputTooLarge`, not a parsed prefix.
+This does not impose an execution deadline or bound the resulting DOM size.
+
+For trusted XSD bundles, `xsd.ParseRestricted(root, baseURI, resources)` accepts
+an explicit map of fully resolved resource URIs to trusted schema bytes. It
+never falls back to filesystem or network resource loading. Relative root
+imports/includes resolve against `baseURI`; unknown resources fail, even when
+libxml2 would ordinarily only warn about a missing import. Do not derive the
+bundle from an untrusted document's schema-location hints.
+
+**Schema limitation:** resource documents must not contain further
+`schemaLocation` references in imports, includes, or redefines. These are
+rejected before compilation because nested schema contexts in libxml2 2.15.4
+do not inherit the resource loader. Namespace-only imports are allowed.
+Every supplied XML document must be well-formed and DTD-free.
+
+```go
+doc, err := libxml2.ParseRestrictedReader(reader, applicationMaxBytes)
+if err != nil {
+    return err
+}
+defer doc.Free()
+
+schema, err := xsd.ParseRestricted(rootXSD, "https://schemas.invalid/root.xsd",
+    map[string][]byte{"https://schemas.invalid/types.xsd": trustedTypesXSD})
+if err != nil {
+    return err
+}
+defer schema.Free()
+return schema.Validate(doc)
+```
+
 Create XML documents using DOM-like interface:
 
 ```go
