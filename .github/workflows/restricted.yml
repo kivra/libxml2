@@ -1,0 +1,44 @@
+name: Restricted XML
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+permissions:
+  contents: read
+
+jobs:
+  libxml2-2-15:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+      - name: Build native libxml2 2.15.4
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends build-essential pkg-config xz-utils
+          cd "$RUNNER_TEMP"
+          curl --fail --silent --show-error --location \
+            https://download.gnome.org/sources/libxml2/2.15/libxml2-2.15.4.tar.xz \
+            --output libxml2-2.15.4.tar.xz
+          echo "98087fd181d9070724f3fbc65c7377db03038eb92bd882374daff44940138821  libxml2-2.15.4.tar.xz" | sha256sum --check
+          tar -xf libxml2-2.15.4.tar.xz
+          cd libxml2-2.15.4
+          ./configure --prefix="$RUNNER_TEMP/native" --without-python
+          make -j2
+          make install
+          echo "PKG_CONFIG_PATH=$RUNNER_TEMP/native/lib/pkgconfig" >> "$GITHUB_ENV"
+          echo "LD_LIBRARY_PATH=$RUNNER_TEMP/native/lib" >> "$GITHUB_ENV"
+      - name: Test restricted and legacy APIs
+        shell: bash
+        run: |
+          set -euo pipefail
+          pkg-config --atleast-version=2.15.4 libxml-2.0
+          # libxml2 2.15 removed its built-in HTTP loader; this legacy case requires it.
+          go test -race -skip '^TestGHIssue67$/Remote_validation$' ./...
+          go vet ./...
