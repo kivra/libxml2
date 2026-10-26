@@ -36,6 +36,12 @@ I needed to write [go-xmlsec](https://github.com/lestrrat-go/xmlsec). This means
 
 ## Features
 
+In-memory XML, HTML, and XSD inputs are limited to `libxml2.MaxInputBytes`
+(64 MiB). Oversized inputs return `libxml2.ErrInputTooLarge`, identifiable
+with `errors.Is`. Reader APIs consume at most the limit plus one byte and do
+not parse truncated input. This bounds source input, not entity expansion,
+DOM size, or resources loaded by file-based schema parsing and imports.
+
 Create XML documents using DOM-like interface:
 
 ```go

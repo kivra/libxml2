@@ -6,6 +6,8 @@ import (
 )
 
 const (
+	// MaxInputBytes bounds in-memory XML, HTML, and schema input before C allocations.
+	MaxInputBytes            = 64 << 20
 	MaxEncodingLength        = 256
 	MaxAttributeNameLength   = 1024
 	MaxElementNameLength     = 1024
@@ -57,6 +59,7 @@ const (
 )
 
 var (
+	ErrInputTooLarge          = errors.New("input exceeds 64 MiB")
 	ErrAttributeNotFound      = errors.New("attribute not found")
 	ErrAttributeNameTooLong   = errors.New("attribute name too long")
 	ErrElementNameTooLong     = errors.New("element name too long")

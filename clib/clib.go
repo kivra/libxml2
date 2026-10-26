@@ -81,11 +81,11 @@ static inline xmlParserErrors MY_xmlParseInNodeContext(xmlNodePtr node, const ch
 static inline void MY_xmlNodeDumpFormatted(xmlBufferPtr buffer, xmlDocPtr doc, xmlNodePtr node, int format) {
 	xmlSaveCtxtPtr ctxt;
 	int options = XML_SAVE_AS_XML;
-	
+
 	if (format > 0) {
 		options |= XML_SAVE_FORMAT;
 	}
-	
+
 	ctxt = xmlSaveToBuffer(buffer, NULL, options);
 	if (ctxt != NULL) {
 		xmlSaveTree(ctxt, node);
@@ -522,6 +522,9 @@ func XMLSchemaParseFromFile(path string) (unsafe.Pointer, error) {
 }
 
 func XMLCreateMemoryParserCtxt(s string, o int) (unsafe.Pointer, error) {
+	if len(s) > MaxInputBytes {
+		return nil, ErrInputTooLarge
+	}
 	cs := C.CString(s)
 	defer C.free(unsafe.Pointer(cs))
 	ctx := C.xmlCreateMemoryParserCtxt(cs, C.int(len(s)))
@@ -556,6 +559,9 @@ func XMLFreeParserCtxt(ctx PtrSource) error {
 }
 
 func HTMLReadDoc(content, url, encoding string, opts int) (unsafe.Pointer, error) {
+	if len(content) > MaxInputBytes {
+		return nil, ErrInputTooLarge
+	}
 	// TODO: use htmlCtxReadDoc later, so we can get the error
 	ccontent := C.CString(content)
 	curl := C.CString(url)
@@ -1895,6 +1901,9 @@ func XMLSetTreeDoc(n PtrSource, d PtrSource) error {
 }
 
 func XMLParseInNodeContext(n PtrSource, data string, o int) (unsafe.Pointer, error) {
+	if len(data) > MaxInputBytes {
+		return nil, ErrInputTooLarge
+	}
 	nptr, err := validNodePtr(n)
 	if err != nil {
 		return nil, err
@@ -2136,6 +2145,9 @@ func XMLTextData(n PtrSource) string {
 }
 
 func XMLSchemaParse(buf []byte, options ...option.Interface) (unsafe.Pointer, error) {
+	if len(buf) > MaxInputBytes {
+		return nil, ErrInputTooLarge
+	}
 	var uri string
 	var encoding string
 	var coptions int
@@ -2244,6 +2256,9 @@ func XMLSchemaFree(s PtrSource) error {
 }
 
 func XMLCtxtReadMemory(ctx PtrSource, file string, baseURL string, encoding string, options int) (unsafe.Pointer, error) {
+	if len(file) > MaxInputBytes {
+		return nil, ErrInputTooLarge
+	}
 	ctxptr, err := validParserCtxtPtr(ctx)
 	if err != nil {
 		return nil, errors.Wrap(err, "not a valid pointer")

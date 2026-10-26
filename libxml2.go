@@ -15,3 +15,11 @@ correctness will be used.
 Also, the return values are still shaky -- I'm still debating how to handle error cases gracefully.
 */
 package libxml2
+
+import "github.com/kivra/libxml2/clib"
+
+// MaxInputBytes is the maximum size of an in-memory XML, HTML, or schema input.
+const MaxInputBytes = clib.MaxInputBytes
+
+// ErrInputTooLarge identifies input that exceeds MaxInputBytes.
+var ErrInputTooLarge = clib.ErrInputTooLarge

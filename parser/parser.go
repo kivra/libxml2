@@ -91,6 +91,9 @@ func New(opts ...Option) *Parser {
 
 // Parse parses XML from the given byte buffer
 func (p *Parser) Parse(buf []byte) (types.Document, error) {
+	if len(buf) > clib.MaxInputBytes {
+		return nil, clib.ErrInputTooLarge
+	}
 	return p.ParseString(string(buf))
 }
 
@@ -116,8 +119,11 @@ func (p *Parser) ParseString(s string) (types.Document, error) {
 // ParseReader parses XML from the given io.Reader
 func (p *Parser) ParseReader(in io.Reader) (types.Document, error) {
 	buf := &bytes.Buffer{}
-	if _, err := buf.ReadFrom(in); err != nil {
+	if _, err := buf.ReadFrom(io.LimitReader(in, clib.MaxInputBytes+1)); err != nil {
 		return nil, errors.Wrap(err, "failed to read from reader")
+	}
+	if buf.Len() > clib.MaxInputBytes {
+		return nil, clib.ErrInputTooLarge
 	}
 
 	return p.ParseString(buf.String())
